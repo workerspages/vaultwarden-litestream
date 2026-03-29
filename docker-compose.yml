@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  vaultwarden:
+    image: ghcr.io/workerspages/vaultwarden-oss:latest
+    container_name: vaultwarden-oss
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # 【核心配置】存储类型：s3 或 webdav
+      - STORAGE_TYPE=s3
+      - SYNC_INTERVAL=5
+      
+      # -------------- S3 配置 --------------
+      - S3_ENDPOINT=https://s3.example.com
+      - S3_ACCESS_KEY=your_access_key
+      - S3_SECRET_KEY=your_secret_key
+      - S3_BUCKET=your_bucket_name
+      - S3_REGION=us-east-1
+      - S3_PATH=vaultwarden
+      
+      # ------------ WebDAV 配置 ------------
+      # 如果 STORAGE_TYPE=webdav，请取消下面变量的注释并填写
+      # - WEBDAV_URL=https://webdav.example.com
+      # - WEBDAV_USER=your_username
+      # - WEBDAV_PASS=your_password
+      # - WEBDAV_VENDOR=other
+      # - WEBDAV_PATH=vaultwarden
+
+      # ------------ 安全/加密配置 ------------
+      # 强烈建议开启数据加密（保护网盘端的明文数据不被泄露）
+      # - ENCRYPT_PASSWORD=your_strong_password
+      # - ENCRYPT_SALT=your_strong_salt
