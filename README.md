@@ -6,7 +6,7 @@
 ## 工作原理
 
 ```
-容器启动 → 从 S3/WebDAV 恢复数据 → 启动青龙面板 → 每 N 分钟自动备份数据到 S3/WebDAV
+容器启动 → 从 S3/WebDAV 恢复数据 → vaultwarden 面板 → 每 N 分钟自动备份数据到 S3/WebDAV
 ```
 
 1. **启动时恢复**: 容器启动时使用 `rclone copy` 从远端拉取数据到 `/data/`
