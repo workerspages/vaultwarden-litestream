@@ -61,7 +61,7 @@ jobs:
           echo "images<<EOF" >> $GITHUB_OUTPUT
           echo "${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
           if [ "${{ steps.check-secrets.outputs.has_secret }}" == "true" ]; then
-            echo "${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+            echo "${{ secrets.DOCKERHUB_USERNAME }}/vaultwarden-oss" >> $GITHUB_OUTPUT
           fi
           echo "EOF" >> $GITHUB_OUTPUT
 
