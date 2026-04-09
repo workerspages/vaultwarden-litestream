@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   vaultwarden:
-    image: ghcr.io/workerspages/vaultwarden-oss:latest
-    container_name: vaultwarden-oss
+    image: ghcr.io/workerspages/vaultwarden-litestream:latest
+    container_name: vaultwarden-litestream
     restart: unless-stopped
     ports:
       - "8080:8080"
