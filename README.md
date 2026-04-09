@@ -69,6 +69,10 @@ docker run --rm -it \
   -e SYNC_STATIC_FILES="true" \
   ghcr.io/workerspages/vaultwarden-litestream:latest
 ```
+**单行格式命令**
+```bash
+docker run --rm -it -v /Users/xxx/old_vaultwarden_data:/data -e LITESTREAM_ENDPOINT="https://s3.example.com" -e LITESTREAM_ACCESS_KEY_ID="your_access_key" -e LITESTREAM_SECRET_ACCESS_KEY="your_secret_key" -e LITESTREAM_BUCKET="your_bucket_name" -e SYNC_STATIC_FILES="true" ghcr.io/workerspages/vaultwarden-litestream:latest
+```
 
 **发生了什么？**
 1. 容器初次开机检测到 `/data` 里已经有 `db.sqlite3` 和文件，会跳过执行覆盖。
