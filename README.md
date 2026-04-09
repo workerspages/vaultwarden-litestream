@@ -49,6 +49,37 @@
 3. **注入变量**: 填补上述的环境变量表，依据您使用的存储方案分配 S3 密钥信息。
 4. **启动服务**: 容器将会在拉取云端数据后自动在 `8080` 端口开启 Vaultwarden 服务。
 
+## 📦 旧数据无损上云 (迁移导入指南)
+
+如果您有一个完整的旧版 Vaultwarden 备份文件夹（包含 `db.sqlite3` 数据库和 `attachments` 附件），您可以发挥“混合架构”的双驱优势，通过**在您的个人电脑本地运行一次临时过渡 Docker** 来实现一键全部同步进云。
+
+**第 1 步：准备本地旧数据**
+将您以前备份的 `db.sqlite3` 及其附属资源统统放在同一个本地文件夹里。比如：`/Users/xxx/old_vaultwarden_data`
+
+**第 2 步：跑一次本地临时容器给 S3"灌"数据**
+在您包含 Docker 环境的终端中运行以下命令（请根据实际填入您的 S3 变量和实际在磁盘上的本机旧数据路径）：
+
+```bash
+docker run --rm -it \
+  -v /Users/xxx/old_vaultwarden_data:/data \
+  -e LITESTREAM_ENDPOINT="https://s3.example.com" \
+  -e LITESTREAM_ACCESS_KEY_ID="your_access_key" \
+  -e LITESTREAM_SECRET_ACCESS_KEY="your_secret_key" \
+  -e LITESTREAM_BUCKET="your_bucket_name" \
+  -e SYNC_STATIC_FILES="true" \
+  ghcr.io/workerspages/vaultwarden-litestream:latest
+```
+
+**发生了什么？**
+1. 容器初次开机检测到 `/data` 里已经有 `db.sqlite3` 和文件，会跳过执行覆盖。
+2. 内部的 **Litestream** 发现本地库比 S3 的新，会在几秒内将其切分包装成流式副本并打包装入云端 Bucket！
+3. 分流执行的 **Rclone** 也会把剩余的那些附件直接上传。这个进程中您的混合云配置已被彻底构建完毕。
+4. 在观察日志输出流大致一两分钟后，即可使用 `Ctrl + C` 结束并强制停止这台本地一次性容器。
+
+**第 3 步：去 PaaS 云平台坐享其成**
+S3 中已有标准的架构源。这时用前文讲述的“部署指南”，在您的 Render / Fly.io 平台开出空白容器并套用同套变量。PaaS 在第一次开机时会反向倒带把云端的全部东西自动下载回 `/data/`。
+此时直接打开网页，您就会发现什么都没有丢失，历史记录无缝在公网上复活了！
+
 ## 🛠️ GitHub Actions 与自动构建生态
 
 如果您自己 Fork 此项目，该程序已经自带了一套完整的全自动发布工作流（位于 `.github/workflows/docker-build.yml`）。
