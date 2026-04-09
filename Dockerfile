@@ -1,7 +1,7 @@
 FROM vaultwarden/server:alpine
 
 # Install dependencies
-RUN apk add --no-cache bash curl tzdata sqlite
+RUN apk add --no-cache bash curl tzdata sqlite rclone
 
 # Install Litestream based on architecture
 ARG TARGETARCH

@@ -8,12 +8,20 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # -------------- Litestream / S3 配置 --------------
+      # -------------- Litestream / S3 配置 (核心参数) --------------
       # 端点 URL (例如: https://<account_id>.r2.cloudflarestorage.com 或 https://s3.us-east-1.amazonaws.com)
       - LITESTREAM_ENDPOINT=https://s3.example.com
       - LITESTREAM_ACCESS_KEY_ID=your_access_key
       - LITESTREAM_SECRET_ACCESS_KEY=your_secret_key
       - LITESTREAM_BUCKET=your_bucket_name
       - LITESTREAM_REGION=us-east-1
-      # 存储路径包含文件名，例如 vaultwarden/db.sqlite3
+      # SQLite DB 存储路径包含文件名，例如 vaultwarden/db.sqlite3
       - LITESTREAM_PATH=vaultwarden/db.sqlite3
+
+      # -------------- 静态文件混合备份配置 (可选) --------------
+      # 设为 true 自动在后台用 Rclone 将包含配置和附件的静态资源备份至 S3
+      - SYNC_STATIC_FILES=true
+      # 同步频率（分钟）
+      - SYNC_INTERVAL=5
+      # 静态数据桶内隔离存放的独立路径前缀
+      - STATIC_BACKUP_PATH=vaultwarden/data_files
