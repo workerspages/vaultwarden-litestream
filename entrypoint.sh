@@ -51,7 +51,7 @@ fi
 # ================= Litestream 恢复与启动 =================
 echo "[Init] Restoring database from remote S3 via Litestream..."
 # 使用 -if-replica-exists 表示如果远端没有备份，就不作任何操作（适用于首次启动）
-if litestream restore -if-replica-exists -v /data/db.sqlite3; then
+if litestream restore -if-replica-exists /data/db.sqlite3; then
     echo "[Init] Restore process completed."
 else
     echo "[Init] Warning: Restore failed. Please check your credentials or network."
